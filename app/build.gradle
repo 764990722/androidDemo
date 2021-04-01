@@ -1,0 +1,100 @@
+plugins {
+    id 'com.android.application'
+}
+
+android {
+    compileSdkVersion 30
+    buildToolsVersion "30.0.2"
+
+    defaultConfig {
+        applicationId "com.example.android_demo"
+        minSdkVersion 16
+        targetSdkVersion 30
+        versionCode 1
+        versionName "1.0"
+
+        multiDexEnabled true //分包
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        ndk {
+            // 设置支持的SO库架构，第三方给的so库哪几种架构，就配置这几种架构
+            abiFilters 'armeabi', 'armeabi', 'x86', 'armeabi-v7a', 'x86_64', 'arm64-v8a'
+        }
+    }
+
+    buildTypes {
+        debug {
+            resValue('string', 'app_name', 'androidDemo-测试版')
+            buildConfigField "String", "SERVER_BASE", '"http://8.136.210.1:9090/"'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+        release {
+            resValue('string', 'app_name', 'androidDemo')
+            buildConfigField "String", "SERVER_BASE", '"http://8.136.210.1:9090/"'
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+    buildFeatures {
+        dataBinding = true
+    }
+    dexOptions {
+        preDexLibraries = false
+    }
+    ndkVersion '21.3.6528147'
+
+}
+
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+    ///////////////////////// Android官方包 //////////////////////////////
+    /* junit4单元测试 UI测试框架 */
+    testImplementation 'junit:junit:4.13.1'
+    androidTestImplementation 'androidx.test.ext:junit:1.1.2'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'
+    /* 官方标准库 */
+    implementation 'androidx.appcompat:appcompat:1.2.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
+    implementation 'com.google.android.material:material:1.2.1'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
+    /* 代码过多分包 */
+    implementation 'androidx.multidex:multidex:2.0.1'
+
+    /////////// 更新资源包 -都是比较稳定的框架 未引入为本地 /////////////////
+    /* 网络访问 */
+    implementation 'com.squareup.okhttp3:okhttp:4.7.2'
+    implementation 'com.squareup.okhttp3:logging-interceptor:4.7.2'
+    implementation 'com.squareup.retrofit2:retrofit:2.6.1'
+    implementation 'com.squareup.retrofit2:converter-gson:2.6.1'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.6.1'
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    /* 异步任务 */
+    implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+    implementation 'io.reactivex.rxjava2:rxjava:2.2.19'
+    /* 日志打印 */
+    implementation 'com.orhanobut:logger:2.2.0'
+    /* JSON解析 */
+    implementation 'com.google.code.gson:gson:2.8.6'
+    /* 灵活的RecyclerView框架 */
+    implementation 'com.github.CymChad:BaseRecyclerViewAdapterHelper:3.0.4'
+    /* 动态权限申请 */
+    implementation 'com.yanzhenjie:permission:2.0.3'
+    /* SmartRefreshLayout刷新 */
+    implementation  'com.scwang.smart:refresh-layout-kernel:2.0.1'      //核心必须依赖
+    implementation  'com.scwang.smart:refresh-header-classics:2.0.1'    //经典刷新头
+    implementation  'com.scwang.smart:refresh-footer-classics:2.0.1'    //经典加载
+    /* 数据传递 */
+    implementation 'org.greenrobot:eventbus:3.1.1'
+    /*图片显示*/
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+    /*知乎图片选择框架*/
+    implementation 'com.zhihu.android:matisse:0.5.3-beta3'
+    /*Android 屏幕适配方案*/
+    implementation files('libs/autosize-1.2.1-sources.jar')
+}

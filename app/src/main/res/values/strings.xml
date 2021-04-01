@@ -1,0 +1,14 @@
+<resources>
+<!--    <string name="app_name">Cashier_Android</string>-->
+
+    <!-- 网络请求失败提示信息 -->
+    <string name="toast_error_http">无法连接到网络</string>
+    <string name="toast_error_connect">请求服务器失败</string>
+    <string name="toast_error_time_out">请求超时</string>
+    <string name="toast_error_data">数据异常</string>
+    <string name="toast_error_unknown">未知错误</string>
+
+    <!-- 加载框 -->
+    <string name="app_loading">加载中......</string>
+    <string name="error_gif">长宽不小于 %1$dpx，且大小不超过 %2$sM。</string>
+</resources>
