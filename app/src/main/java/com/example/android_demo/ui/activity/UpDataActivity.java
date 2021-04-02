@@ -85,10 +85,12 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
             binding.editPhone.setText(bean.getPhone());
             binding.editName.setText(bean.getUsername());
             binding.editPassword.setText(bean.getPassword());
-            Glide.with(this)
-                    .load(bean.getHerdImage())
-                    .apply(new RequestOptions().centerCrop().error(R.mipmap.ic_logo))
-                    .into(binding.imageView);
+            if (!TextUtils.isEmpty(bean.getHerdImage())) {
+                Glide.with(this)
+                        .load(bean.getHerdImage())
+                        .apply(new RequestOptions().centerCrop().error(R.mipmap.ic_logo))
+                        .into(binding.imageView);
+            }
         }
     }
 
@@ -233,7 +235,6 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
                         return;
                     }
                     if (Utils.isVivo()) {//vivo不裁剪
-                        binding.imageView.setImageBitmap(bitmap);
                         saveBitmap(bitmap);
                     } else {
                         //将Bitmap转化为uri
@@ -250,7 +251,6 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
                         if (Utils.isVivo()) {//vivo不裁剪
                             //通过uri获取到bitmap对象
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), imageUri);
-                            binding.imageView.setImageBitmap(bitmap);
                             saveBitmap(bitmap);
                         } else {
                             startPhotoZoom(imageUri);
@@ -265,7 +265,6 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
                     if (extras != null) {
                         try {
                             Bitmap photo = extras.getParcelable("data");
-                            binding.imageView.setImageBitmap(photo);
                             saveBitmap(photo);
                         } catch (Exception e) {
                         }
@@ -275,7 +274,6 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
                 try {
                     headShot = BitmapFactory.decodeStream(this.getContentResolver().openInputStream(cropImageUri));
                     if (headShot != null) {
-                        binding.imageView.setImageBitmap(headShot);
                         saveBitmap(headShot);
                     }
                 } catch (FileNotFoundException e) {
@@ -330,6 +328,7 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
      * @param bitmap
      */
     public void saveBitmap(Bitmap bitmap) {
+        binding.imageView.setImageBitmap(bitmap);
         File file = saveBitmap1(bitmap);
         RequestBody requestBody = RequestBody.create(file, MediaType.parse("multipart/form-data"));
         part = MultipartBody.Part.createFormData("file", file.getName(), requestBody);

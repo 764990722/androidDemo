@@ -49,6 +49,18 @@ public interface ApiService {
 
 
     /**
+     * 查询用户列表 - 分页
+     * @param pageNum   第几页
+     * @param pageSize  每页条数
+     * @param username  姓名条件查询
+     */
+    @GET("getUserPageList")
+    Observable<Result<RUserList>> getUserPageList(@Query("pageNum") Integer pageNum,
+                                                  @Query("pageSize") Integer pageSize,
+                                                  @Query("username") String username);
+
+
+    /**
      * 修改用户信息
      * 并上传头像
      */

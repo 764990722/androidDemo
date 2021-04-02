@@ -1,6 +1,7 @@
 package com.example.android_demo.ui.activity;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -20,12 +21,10 @@ import com.example.android_demo.repository.Network;
 import com.example.android_demo.repository.Scheduler;
 import com.example.android_demo.repository.Subs;
 import com.example.android_demo.repository.entity.receive.RUserList;
-import com.example.android_demo.repository.net.AppValue;
 import com.example.android_demo.ui.base.BaseActivity;
-import com.example.android_demo.utils.Base64Utils;
 import com.example.android_demo.utils.JSON;
-import com.example.android_demo.utils.Text;
 import com.scwang.smart.refresh.layout.api.RefreshLayout;
+import com.scwang.smart.refresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smart.refresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
@@ -42,6 +41,8 @@ public class UserListActivity extends BaseActivity<ActivityUserlistBinding> {
     private static final String TAG = UserListActivity.class.getSimpleName();
     private BaseQuickAdapter<RUserList.ListBean, BaseViewHolder> mAdapter;
     private List<RUserList.ListBean> list = new ArrayList<>();
+    private int page = 1;
+    private boolean isMore = false;//是否更多
 
     @Override
     protected int onLayout() {
@@ -68,7 +69,17 @@ public class UserListActivity extends BaseActivity<ActivityUserlistBinding> {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 refreshlayout.finishRefresh(500);
-                viewUserList();
+                page = 1;
+                isMore = false;
+                viewUserList(page);
+            }
+        });
+        binding.smartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
+                isMore = true;
+                page++;
+                viewUserList(page);
             }
         });
     }
@@ -76,23 +87,45 @@ public class UserListActivity extends BaseActivity<ActivityUserlistBinding> {
     @Override
     protected void onResume() {
         super.onResume();
-        viewUserList();
+        viewUserList(page);
     }
 
-    private void viewUserList() {
-        Network.api().queryUser()
+    private void viewUserList(int page) {
+        Network.api().getUserPageList(page, 10, "")
                 .compose(Scheduler.apply())
                 .subscribe(new Subs<RUserList>(2) {
                     @Override
                     public void onSuccess(RUserList data) {
                         Log.i(TAG, "onSuccess: " + JSON.toJson(data));
-                        if (data!=null){
-                            list.clear();
+                        if (data != null) {
+                            if (isMore) {
+                                //加载更多
+                                if (data.getList().size() == 0) {
+                                    binding.smartRefreshLayout.finishRefreshWithNoMoreData();
+                                } else {
+                                    binding.smartRefreshLayout.finishLoadMore();
+                                }
+                            } else {
+                                //正常加载
+                                list.clear();//清空数据
+                                if (data.getList().size() == 0) {//显示空白页
+                                    mAdapter.setEmptyView(R.layout.userlist_empty);
+                                }
+                            }
                             list.addAll(data.getList());
                             if (mAdapter != null) {
                                 mAdapter.notifyDataSetChanged();
                             }
+                        } else {
+                            if (isMore) {
+                                binding.smartRefreshLayout.finishLoadMore();
+                            } else {
+                                if (mAdapter != null) {
+                                    mAdapter.setEmptyView(R.layout.userlist_empty);
+                                }
+                            }
                         }
+
                     }
                 });
     }
@@ -113,7 +146,7 @@ public class UserListActivity extends BaseActivity<ActivityUserlistBinding> {
                         .into(image_view);
 
                 tv_name.setText(item.getUsername());
-                tv_phone.setText(String.format("%s %s",item.getPhone(),item.getPassword()));
+                tv_phone.setText(String.format("%s %s", item.getPhone(), item.getPassword()));
             }
         };
         binding.rvTransaction.setFocusable(false);//解决显示位置
@@ -122,13 +155,11 @@ public class UserListActivity extends BaseActivity<ActivityUserlistBinding> {
         mAdapter.setOnItemClickListener(new OnItemClickListener() {
             @Override
             public void onItemClick(@NonNull BaseQuickAdapter<?, ?> adapter, @NonNull View view, int position) {
-                startActivity(new Intent(UserListActivity.this,UpDataActivity.class)
-                        .putExtra("userData",list.get(position)));
+                startActivity(new Intent(UserListActivity.this, UpDataActivity.class)
+                        .putExtra("userData", list.get(position)));
             }
         });
     }
-
-
 
 
 }
