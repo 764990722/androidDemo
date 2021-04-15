@@ -1,16 +1,24 @@
 package com.example.android_demo.ui.activity;
 
+import android.app.Activity;
+import android.content.ContentUris;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.RequiresApi;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -112,7 +120,7 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
         }
         if (bean == null) return;
         SUpData body = new SUpData();
-        body.setId(bean.getId());
+        body.setId("asdas");
         body.setPhone(binding.editPhone.getText().toString().trim());
         body.setUsername(binding.editName.getText().toString().trim());
         body.setPassword(binding.editPassword.getText().toString().trim());
@@ -176,6 +184,7 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
     public void herdImage() {
         requestPermission(Permission.Group.STORAGE, Permission.Group.CAMERA);
     }
+
 
     private void requestPermission(String[] STORAGE, String... CAMERA) {
         AndPermission.with(this)
@@ -281,6 +290,8 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
                 }
             }
         }
+
+
     }
 
     /**
@@ -357,5 +368,9 @@ public class UpDataActivity extends BaseActivity<ActivityUpdataBinding> {
         }
         return file;
     }
+
+
+
+
 
 }

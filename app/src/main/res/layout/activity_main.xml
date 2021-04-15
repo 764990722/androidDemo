@@ -150,6 +150,16 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:text="APK上传"
+                        android:onClick="@{()->activity.apkFile()}"
+                        android:layout_centerInParent="true"
+                        android:textSize="15sp"
+                        android:textStyle="bold"
+                        android:textColor="@color/fontBlue"/>
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:text="用户注册"
                         android:onClick="@{()->activity.register()}"
@@ -159,8 +169,6 @@
 
 
                 </RelativeLayout>
-
-
 
             </LinearLayout>
 

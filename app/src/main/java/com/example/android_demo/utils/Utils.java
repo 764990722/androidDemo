@@ -3,6 +3,8 @@ package com.example.android_demo.utils;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
@@ -231,4 +233,22 @@ public class Utils {
             return (int) dipValue;
         }
     }
+
+
+    /**
+     * 当前应用的版本名称 例如：1.0.0
+     */
+    public static synchronized String getVersionName(Context context) {
+        try {
+            PackageManager packageManager = context.getPackageManager();
+            PackageInfo packageInfo = packageManager.getPackageInfo(
+                    context.getPackageName(), 0);
+            return packageInfo.versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "1.0.0";
+        }
+    }
+
+
 }

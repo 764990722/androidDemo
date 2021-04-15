@@ -32,29 +32,30 @@ public interface ApiService {
     /**
      * 用户登录
      */
-    @POST("login")
+    @POST("user/login")
     Observable<Result<Object>> login(@Body SLogin body);
 
     /**
      * 用户注册
      */
-    @POST("register")
+    @POST("user/register")
     Observable<Result<Object>> register(@Body SRegister body);
 
     /**
      * 查询用户列表
      */
-    @GET("queryUser")
+    @GET("user/queryUser")
     Observable<Result<RUserList>> queryUser();
 
 
     /**
      * 查询用户列表 - 分页
-     * @param pageNum   第几页
-     * @param pageSize  每页条数
-     * @param username  姓名条件查询
+     *
+     * @param pageNum  第几页
+     * @param pageSize 每页条数
+     * @param username 姓名条件查询
      */
-    @GET("getUserPageList")
+    @GET("user/getUserPageList")
     Observable<Result<RUserList>> getUserPageList(@Query("pageNum") Integer pageNum,
                                                   @Query("pageSize") Integer pageSize,
                                                   @Query("username") String username);
@@ -64,14 +65,14 @@ public interface ApiService {
      * 修改用户信息
      * 并上传头像
      */
-    @POST("updateUser")
+    @POST("user/updateUser")
     Observable<Result<Object>> updateUser(@Body SUpData body);
 
 
     /**
      * 删除用户
      */
-    @POST("deleteUser")
+    @POST("user/deleteUser")
     Observable<Result<Object>> deleteUser(@Body SUpData body);
 
     /**
@@ -79,12 +80,31 @@ public interface ApiService {
      * 修改用户信息并上传头像
      */
     @Multipart
-    @POST("updateHerd")
+    @POST("user/updateHerd")
     Observable<Result<Object>> updateHerd(@Query("id") String id,
                                           @Query("username") String username,
                                           @Query("password") String password,
                                           @Query("phone") String phone,
                                           @Part MultipartBody.Part file);
+
+    /**
+     * 不能用@Body，@Multipart必须写
+     * 修改用户信息并上传头像
+     */
+    @Multipart
+    @POST("user/addApk")
+    Observable<Result<Object>> addApk(@Query("apk_version") String apk_version,
+                                      @Part MultipartBody.Part apk_file);
+
+
+    /**
+     * 不能用@Body，@Multipart必须写
+     * 修改用户信息并上传头像
+     */
+    @Multipart
+    @POST("user/addLog")
+    Observable<Result<Object>> addLog(@Query("log_time") String log_time,
+                                      @Part MultipartBody.Part log_file);
 
     @POST(NetParmet.LOGIN_PASSWORD)
     Observable<Result<Object>> PostPassWordLogin(
